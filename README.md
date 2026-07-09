@@ -51,7 +51,3 @@ semantics.
 
 > ⚠️ Resolving a remote `extends:` runs `git` against the referenced URL. Only extend manifests
 > you trust.
-
-## 📄 License
-
-GPL-3.0-or-later, matching the tool.
