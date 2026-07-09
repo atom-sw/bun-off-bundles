@@ -1,0 +1,21 @@
+*~
+
+# Emacs transients
+\#*\#
+.#*
+
+# boff-deployed output (dogfooding)
+.boff/
+.claude/
+.opencode/
+.agents/
+.config/
+.mcp.json
+opencode.json
+GEMINI.md
+.tldr/
+.tldrignore
+
+# Python bytecode (hooks/*.py)
+__pycache__/
+*.py[codz]

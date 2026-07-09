@@ -1,0 +1,5 @@
+[tools]
+# rtk: command-output compressor (registry alias for github:rtk-ai/rtk).
+rtk = "latest"
+# llm-tldr: provides the tldr / llm-tldr / tldr-mcp binaries for the MCP server.
+"pipx:llm-tldr" = "latest"

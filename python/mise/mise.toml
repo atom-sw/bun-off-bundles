@@ -1,0 +1,6 @@
+# Dev tools only: the bundle does not pin the project's Python runtime version
+# (uv or the project owns that). This keeps the bundle safe on existing projects.
+[tools]
+uv = "latest"
+ruff = "latest"
+"npm:pyright" = "latest"

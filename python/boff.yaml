@@ -1,0 +1,62 @@
+meta:
+  name: python
+  description: Python development rules, tooling, and a semantic-code MCP server.
+  long_description: |
+    A Python stack for AI-assisted development, layered on the general-dev bundle.
+    It adds Python-specific workflow rules (uv, ruff, type checking, pytest), the
+    serena MCP server for LSP-backed semantic navigation and editing, a ruff
+    format-on-edit hook, and a mise.toml pinning the toolchain.
+  version: "0.1.0"
+  author: bun-off
+
+extends: ../general-dev
+
+rules:
+  - name: python-toolchain
+    category: python-dev
+    globs: ["**/*.py"]
+  - name: python-style
+    category: python-dev
+    globs: ["**/*.py"]
+  - name: python-typing
+    category: python-dev
+    globs: ["**/*.py"]
+  - name: python-testing
+    category: python-dev
+    globs: ["**/*.py", "**/test_*.py", "**/tests/**"]
+  - name: docstrings
+    category: python-dev
+    globs: ["**/*.py"]
+
+skills:
+  - python-packaging
+
+slash_commands:
+  - name: python-packaging
+    available_on: [opencode]
+
+mcp_servers:
+  - serena
+
+event_hooks:
+  - name: ruff-format
+    event: after_edit
+    script: ruff-format.sh
+    available_on: [claude]
+
+settings:
+  opencode:
+    formatter:
+      ruff:
+        # Only format when the project opts into ruff and ruff/uv is available,
+        # so the bundle never reformats a non-ruff project. $1 is the file ($FILE).
+        command:
+          - sh
+          - "-c"
+          - '{ [ -f ruff.toml ] || [ -f .ruff.toml ] || grep -q "^\[tool\.ruff" pyproject.toml 2>/dev/null; } || exit 0; if command -v ruff >/dev/null 2>&1; then ruff format "$1"; elif command -v uv >/dev/null 2>&1; then uv run ruff format "$1"; fi'
+          - _
+          - "$FILE"
+        extensions: [".py", ".pyi"]
+
+mise:
+  - mise/mise.toml
