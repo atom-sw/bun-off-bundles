@@ -31,23 +31,24 @@ works too, minus the artifacts that platform has no workspace target for.
 ## 🧬 Extending a bundle
 
 A manifest can name a bundle from this repo directly, without cloning it. Bun Off fetches the
-subtree and caches it:
+subtree when deploying:
 
 ```yaml
 meta:
   name: my-stack
   description: Our team's Python stack.
 
-extends: https://github.com/atom-sw/bun-off-bundles.git/python@v0.1.0
+extends: https://github.com/atom-sw/bun-off-bundles.git/python
 
 rules:
   - house-style
 ```
 
-The `.git` segment splits the repo URL from the in-repo subdirectory, and the trailing `@<ref>`
-pins a tag, branch, or commit. Your own manifest wins on any name it redefines. See
-[Extending manifests](https://github.com/atom-sw/bun-off#-extending-manifests) for the merge
-semantics.
+The `.git` segment splits the repo URL from the in-repo subdirectory,
+and the trailing optional `@<ref>` pins a tag, branch, or commit. Your
+own manifest wins on any name it redefines. See [Extending
+manifests](https://github.com/atom-sw/bun-off#-extending-manifests)
+for the merge semantics.
 
 > ⚠️ Resolving a remote `extends:` runs `git` against the referenced URL. Only extend manifests
 > you trust.
