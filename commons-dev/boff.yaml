@@ -1,14 +1,15 @@
 meta:
   name: commons-dev
-  description: Language-agnostic coding rules, plus rtk output compression and the context7 docs server.
+  description: Language-agnostic coding discipline and workflow habits for AI-assisted development.
   long_description: |
-    The shared baseline for AI-assisted development on any language. It ships a small,
-    high-signal set of workflow rules and the doc-check skill, plus two light, universally
-    useful integrations: rtk command-output compression and the context7 library-documentation
-    MCP server. Heavier, project-wide code intelligence (llm-tldr) lives in general-dev, which
-    extends this bundle.
+    For developers who want an AI assistant to write disciplined code in any language. It
+    gathers a compact set of workflow habits, spanning testing, commits, documentation,
+    security, and keeping the assistant's attention on the task, and adds a few quiet
+    conveniences: on-demand documentation checks, quick access to current library reference,
+    and terser command output. Use it as the common footing under any project, whatever the
+    language or tools.
   version: "0.1.0"
-  author: bun-off
+  author: bugcounting.net
 
 rules:
   - verify-your-work

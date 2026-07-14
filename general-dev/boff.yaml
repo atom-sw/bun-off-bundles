@@ -1,13 +1,14 @@
 meta:
   name: general-dev
-  description: Adds project-wide code intelligence (the llm-tldr MCP server) on top of commons-dev.
+  description: Language-agnostic support for AI-assisted work across a whole codebase.
   long_description: |
-    Extends commons-dev with the llm-tldr MCP server: compressed, project-wide code-intelligence
-    context, warmed on deploy. Deploying it also installs commons-dev's baseline rules, the
-    context7 docs server, and rtk output compression. Language-specific stacks (such as python)
-    extend this bundle.
+    For developers working in a real, multi-file codebase in any language. On top of a
+    foundation of sound engineering habits, it gives the assistant a compressed map of the
+    whole project, so it can navigate and reason about code that spans many files instead of
+    only the one in front of it. Reach for it when the work touches much of a repository and
+    the assistant needs to keep the whole picture in view.
   version: "0.1.1"
-  author: bun-off
+  author: bugcounting.net
 
 extends: ../commons-dev
 

@@ -1,14 +1,14 @@
 meta:
   name: python-scripts
-  description: Lightweight rules and tooling for standalone Python scripts.
+  description: A lightweight Python setup for standalone, single-file scripts.
   long_description: |
-    A lean Python stack for standalone scripts: single-file programs with few or no
-    dependencies. It layers scripting-focused rules (stdlib-first, PEP 723 inline
-    dependencies, unittest-based testing) and a ruff/pyright dev toolchain onto commons-dev.
-    It deliberately omits packaging, uv mandates, and project-wide code intelligence: a
-    dependency-free script runs with `python script.py`.
+    For anyone writing standalone Python scripts: single-file programs and small utilities
+    with few or no dependencies. It stays deliberately minimal, leaning on the standard
+    library, lightweight testing, and just enough linting and type checking to keep a script
+    honest. The payoff is portability: a script that needs no outside packages runs anywhere
+    with a plain `python script.py`, and there is no packaging or scaffolding to set up first.
   version: "0.1.0"
-  author: bun-off
+  author: bugcounting.net
 
 extends: ../commons-dev
 

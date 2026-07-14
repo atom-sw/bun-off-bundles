@@ -1,13 +1,14 @@
 meta:
   name: python
-  description: Python development rules, tooling, and a semantic-code MCP server.
+  description: A complete Python setup for AI-assisted development of real-world projects.
   long_description: |
-    A Python stack for AI-assisted development, layered on the general-dev bundle.
-    It adds Python-specific workflow rules (uv, ruff, type checking, pytest), the
-    serena MCP server for LSP-backed semantic navigation and editing, a ruff
-    format-on-edit hook, and a mise.toml pinning the toolchain.
+    For Python developers building real applications and libraries: packaged,
+    dependency-managed projects rather than one-off scripts. It sets modern conventions for
+    formatting, typing, testing, and dependency management, keeps files tidy as they change,
+    gives the assistant a semantic understanding of the code for precise navigation and edits,
+    and knows how to cut a release when the project is ready to ship.
   version: "0.1.0"
-  author: bun-off
+  author: bugcounting.net
 
 extends: ../general-dev
 
