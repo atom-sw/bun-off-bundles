@@ -10,10 +10,21 @@ Each directory here is a manifest folder you can deploy as-is, or extend with yo
 
 | Bundle | What it deploys |
 |---|---|
-| [`general-dev`](general-dev/README.md) | A language-agnostic baseline: workflow rules, the `context7` and `llm-tldr` MCP servers, `rtk` command-output compression, and a `doc-check` skill. |
+| [`commons-dev`](commons-dev/README.md) | The shared language-agnostic baseline: workflow rules, the `context7` docs server, `rtk` command-output compression, and a `doc-check` skill. |
+| [`general-dev`](general-dev/README.md) | `commons-dev` plus the `llm-tldr` MCP server for project-wide code intelligence. |
 | [`python`](python/README.md) | A Python stack: `uv`, `ruff`, type-checking and `pytest` rules, the `serena` MCP server, a ruff format-on-edit hook, and a packaging skill. |
+| [`python-scripts`](python-scripts/README.md) | A lightweight stack for standalone scripts: stdlib-first rules, `unittest` testing, a ruff format-on-edit hook, and a `new-script` scaffolding skill. |
 
-`python` extends `general-dev`, so deploying it installs the baseline rules and servers too.
+The bundles form an extension tree, so deploying one installs everything it builds on:
+
+```
+commons-dev
+├── general-dev ── python
+└── python-scripts
+```
+
+`general-dev` extends `commons-dev`; `python` extends `general-dev`; `python-scripts` extends
+`commons-dev` directly (a leaner base, without the project-wide `llm-tldr` index).
 
 ## 🚀 Usage
 

@@ -1,5 +1,4 @@
 [tools]
-# rtk: command-output compressor (registry alias for github:rtk-ai/rtk).
-rtk = "latest"
 # llm-tldr: provides the tldr / llm-tldr / tldr-mcp binaries for the MCP server.
+# rtk lives in commons-dev's drop-in; the two merge in .config/mise/conf.d/.
 "pipx:llm-tldr" = "latest"

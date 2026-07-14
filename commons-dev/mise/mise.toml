@@ -1,0 +1,3 @@
+[tools]
+# rtk: command-output compressor (registry alias for github:rtk-ai/rtk).
+rtk = "latest"

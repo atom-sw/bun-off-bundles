@@ -1,0 +1,53 @@
+meta:
+  name: commons-dev
+  description: Language-agnostic coding rules, plus rtk output compression and the context7 docs server.
+  long_description: |
+    The shared baseline for AI-assisted development on any language. It ships a small,
+    high-signal set of workflow rules and the doc-check skill, plus two light, universally
+    useful integrations: rtk command-output compression and the context7 library-documentation
+    MCP server. Heavier, project-wide code intelligence (llm-tldr) lives in general-dev, which
+    extends this bundle.
+  version: "0.1.0"
+  author: bun-off
+
+rules:
+  - verify-your-work
+  - writing-tests
+  - lint-exceptions
+  - explore-then-code
+  - match-project-conventions
+  - precise-context
+  - vcs-etiquette
+  - commit-conventions
+  - security-basics
+  - documentation-style
+  - writing-docs
+  - context-management
+  # Claude and OpenCode get a real rtk hook/plugin from the post_install hook;
+  # antigravity has none, so inline rtk usage guidance into its GEMINI.md.
+  - name: rtk-usage
+    available_on: [antigravity]
+
+skills:
+  - doc-check
+
+mcp_servers:
+  - context7
+
+settings:
+  opencode:
+    plugin:
+      - "@tarquinen/opencode-dcp"
+
+mise:
+  - mise/mise.toml
+
+hooks:
+  post_install:
+    - script: mise-install   # install the toolchain first
+    - script: rtk-init       # then activate rtk
+
+event_hooks:
+  - name: mise-install
+    event: session_start
+    command: "mise trust 2>/dev/null; mise install 2>/dev/null || true"

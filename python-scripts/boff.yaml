@@ -1,0 +1,57 @@
+meta:
+  name: python-scripts
+  description: Lightweight rules and tooling for standalone Python scripts.
+  long_description: |
+    A lean Python stack for standalone scripts: single-file programs with few or no
+    dependencies. It layers scripting-focused rules (stdlib-first, PEP 723 inline
+    dependencies, unittest-based testing) and a ruff/pyright dev toolchain onto commons-dev.
+    It deliberately omits packaging, uv mandates, and project-wide code intelligence: a
+    dependency-free script runs with `python script.py`.
+  version: "0.1.0"
+  author: bun-off
+
+extends: ../commons-dev
+
+rules:
+  - name: python-script-structure
+    category: python-scripts-dev
+    globs: ["**/*.py"]
+  - name: python-script-style
+    category: python-scripts-dev
+    globs: ["**/*.py"]
+  - name: python-script-dependencies
+    category: python-scripts-dev
+    globs: ["**/*.py"]
+  - name: python-script-testing
+    category: python-scripts-dev
+    globs: ["**/*.py", "**/test_*.py"]
+
+skills:
+  - new-script
+
+slash_commands:
+  - name: new-script
+    available_on: [opencode]
+
+event_hooks:
+  - name: ruff-format
+    event: after_edit
+    script: ruff-format.sh
+    available_on: [claude]
+
+settings:
+  opencode:
+    formatter:
+      ruff:
+        # Only format when the project opts into ruff and ruff/uv is available,
+        # so the bundle never reformats a non-ruff project. $1 is the file ($FILE).
+        command:
+          - sh
+          - "-c"
+          - '{ [ -f ruff.toml ] || [ -f .ruff.toml ] || grep -q "^\[tool\.ruff" pyproject.toml 2>/dev/null; } || exit 0; if command -v ruff >/dev/null 2>&1; then ruff format "$1"; elif command -v uv >/dev/null 2>&1; then uv run ruff format "$1"; fi'
+          - _
+          - "$FILE"
+        extensions: [".py", ".pyi"]
+
+mise:
+  - mise/mise.toml

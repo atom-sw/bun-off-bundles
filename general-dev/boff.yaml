@@ -1,55 +1,22 @@
 meta:
   name: general-dev
-  description: Language-agnostic coding rules and universally useful MCP servers.
+  description: Adds project-wide code intelligence (the llm-tldr MCP server) on top of commons-dev.
   long_description: |
-    A baseline stack for AI-assisted software development on any language.
-    It ships a small, high-signal set of workflow rules distilled from the
-    Claude Code and OpenCode best-practice guides, plus two MCP servers:
-    context7 (up-to-date library documentation) and llm-tldr (compressed
-    code-intelligence context). Language-specific stacks extend this bundle.
-  version: "0.1.0"
+    Extends commons-dev with the llm-tldr MCP server: compressed, project-wide code-intelligence
+    context, warmed on deploy. Deploying it also installs commons-dev's baseline rules, the
+    context7 docs server, and rtk output compression. Language-specific stacks (such as python)
+    extend this bundle.
+  version: "0.1.1"
   author: bun-off
 
-rules:
-  - verify-your-work
-  - writing-tests
-  - lint-exceptions
-  - explore-then-code
-  - match-project-conventions
-  - precise-context
-  - vcs-etiquette
-  - commit-conventions
-  - security-basics
-  - documentation-style
-  - writing-docs
-  - context-management
-  # Claude and OpenCode get a real rtk hook/plugin from the post_install hook;
-  # antigravity has none, so inline rtk usage guidance into its GEMINI.md.
-  - name: rtk-usage
-    available_on: [antigravity]
-
-skills:
-  - doc-check
+extends: ../commons-dev
 
 mcp_servers:
-  - context7
   - llm-tldr
-
-settings:
-  opencode:
-    plugin:
-      - "@tarquinen/opencode-dcp"
 
 mise:
   - mise/mise.toml
 
 hooks:
   post_install:
-    - script: mise-install   # install the toolchain first
-    - script: tldr-warm      # then build the llm-tldr index
-    - script: rtk-init       # then activate rtk
-
-event_hooks:
-  - name: mise-install
-    event: session_start
-    command: "mise trust 2>/dev/null; mise install 2>/dev/null || true"
+    - script: tldr-warm   # build the llm-tldr index (mise-install runs first, from commons-dev)
