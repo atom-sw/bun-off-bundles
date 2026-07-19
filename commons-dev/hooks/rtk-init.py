@@ -1,7 +1,7 @@
 """Post-install hook: activate rtk for the deployed platforms.
 
 rtk (rtk-ai/rtk) compresses verbose command output before it reaches the model.
-Its activation is a one-time `rtk init`, analogous to llm-tldr's `tldr warm`.
+Its activation is a one-time `rtk init`.
 
 rtk's effective integrations are global-only, so this hook always initializes
 globally regardless of deploy scope:

@@ -76,6 +76,6 @@ boff deploy path/to/bun-off-bundles/commons-dev --platform claude
 boff deploy path/to/bun-off-bundles/commons-dev --platform opencode
 ```
 
-Most users deploy a bundle that extends this one instead. `general-dev` adds the `llm-tldr`
-code-intelligence server, and language-specific stacks (such as `python` and `python-scripts`)
+Most users deploy a bundle that extends this one instead. `general-dev` adds the `tldr`
+(tldr-code) code-intelligence server, and language-specific stacks (such as `python` and `python-scripts`)
 build on top, so deploying any of them pulls in these rules and integrations automatically.

@@ -7,17 +7,13 @@ meta:
     whole project, so it can navigate and reason about code that spans many files instead of
     only the one in front of it. Reach for it when the work touches much of a repository and
     the assistant needs to keep the whole picture in view.
-  version: "0.1.1"
+  version: "0.2.0"
   author: bugcounting.net
 
 extends: ../commons-dev
 
 mcp_servers:
-  - llm-tldr
+  - tldr
 
 mise:
   - mise/mise.toml
-
-hooks:
-  post_install:
-    - script: tldr-warm   # build the llm-tldr index (mise-install runs first, from commons-dev)

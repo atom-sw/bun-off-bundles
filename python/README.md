@@ -38,7 +38,7 @@ Tooling:
   Both are guarded: they format an edited Python file only when the project opts into ruff (a
   ruff config or a `[tool.ruff]` table), so the bundle never reformats a non-ruff project.
 - A `mise.toml` declaring the dev tools `uv`, `ruff`, and `pyright`. These combine with
-  general-dev's tools (rtk, llm-tldr) into one mise drop-in, installed by the inherited
+  general-dev's tools (rtk, tldr-code) into one mise drop-in, installed by the inherited
   `mise-install` hook. It does not pin the project's Python version: the project (or uv) owns that.
 
 ## Existing projects
@@ -57,6 +57,6 @@ boff deploy path/to/bun-off-bundles/python --platform opencode
 
 ## Notes
 
-- `serena` and the inherited `llm-tldr` server both provide code intelligence. Running
+- `serena` and the inherited `tldr` server both provide code intelligence. Running
   both is within the recommended MCP budget, but if you want a leaner setup, drop one.
 - The ruff hook and formatter assume a `uv`-managed project (they call `uv run ruff`).

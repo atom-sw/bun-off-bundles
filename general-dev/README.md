@@ -10,15 +10,19 @@ It extends `commons-dev`, so deploying it also installs that bundle's baseline r
 
 MCP server:
 
-- `llm-tldr`: compressed code-intelligence context for exploring a codebase. A `post_install`
-  hook runs `llm-tldr warm .` to build its semantic index for the project (skipped with a hint
-  if the binary is absent).
+- `tldr`: compressed code-intelligence context for exploring a codebase, from
+  [`tldr-code`](https://github.com/parcadei/tldr-code). It reads the project source directly, so
+  it needs no index or warm-up step: it answers queries (AST, call graph, data flow, security,
+  and quality) on demand over MCP.
 
 Toolchain:
 
-- A `mise/mise.toml` declaring `pipx:llm-tldr`, which provides the server's binaries. It merges
-  under `.config/mise/conf.d/` with commons-dev's rtk drop-in and is installed by the inherited
-  `mise-install` hook (which runs before `tldr-warm`).
+- A `mise/mise.toml` declaring `cargo-binstall` and `cargo:tldr-cli`, which provide the server's
+  `tldr-mcp` binary (plus the `tldr` CLI). mise's cargo backend uses `cargo-binstall` to fetch
+  tldr-code's precompiled release binaries, so no Rust toolchain is needed to build from source.
+  The prebuilt binaries ship default features, so the optional `semantic` natural-language search
+  is not included. The drop-in merges under `.config/mise/conf.d/` with commons-dev's rtk drop-in
+  and is installed by the inherited `mise-install` hook.
 
 ## Usage
 

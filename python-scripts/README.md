@@ -51,8 +51,8 @@ Tooling:
 - **No uv mandate**: uv (or pipx) is a convenient way to run a script that uses PEP 723 inline
   dependencies, but it is never required to run a dependency-free script.
 - **No project-wide code intelligence**: it extends `commons-dev`, not `general-dev`, so it skips
-  the `llm-tldr` server (whose project index adds little for a lone script) and the `serena`
-  server that the `python` bundle adds.
+  the `tldr` (tldr-code) server (whose whole-project view adds little for a lone script) and the
+  `serena` server that the `python` bundle adds.
 
 ## Usage
 

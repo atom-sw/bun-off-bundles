@@ -1,4 +1,9 @@
 [tools]
-# llm-tldr: provides the tldr / llm-tldr / tldr-mcp binaries for the MCP server.
-# rtk lives in commons-dev's drop-in; the two merge in .config/mise/conf.d/.
-"pipx:llm-tldr" = "latest"
+# tldr-code: provides the tldr / tldr-daemon / tldr-mcp binaries for the MCP server.
+# cargo-binstall fetches tldr-code's precompiled release binaries, so no Rust toolchain
+# is needed to build from source (mise's cargo backend uses binstall by default). The
+# upstream prebuilt binaries ship default features only, so the `semantic` natural-language
+# search feature is not included. rtk lives in commons-dev's drop-in; the two merge in
+# .config/mise/conf.d/.
+cargo-binstall = "latest"
+"cargo:tldr-cli" = "latest"
