@@ -72,11 +72,57 @@ The Claude hook is guarded with `command -v rtk` and fails open, so a workspace 
 is not installed yet runs its commands unwrapped instead of erroring. The OpenCode plugin
 disables itself the same way.
 
-> **Upgrading from an earlier version of this bundle?** It ran `rtk init -g`, which patched
-> `~/.claude/settings.json`, `~/.claude/RTK.md`, `~/.claude/CLAUDE.md`, and
-> `~/.config/opencode/plugins/rtk.ts`. A deploy now detects those leftovers and prints how to
-> remove them: `rtk init -g --uninstall`. Dry-run it first, because it also deletes
-> `~/.claude/CLAUDE.md` when stripping the `@RTK.md` line leaves that file empty.
+Bundle versions up to 0.1.0 installed rtk globally instead. If you ran one of those, see
+[Upgrading to 0.2.0](#upgrading-to-020-removing-a-global-rtk-install).
+
+## Upgrading to 0.2.0: removing a global rtk install
+
+Bundle versions up to 0.1.0 activated rtk by running `rtk init -g`, which writes to your
+**global** config. Since the rtk binary comes from the bundle's per-project mise drop-in, that
+left a global hook pointing at a binary only some projects have. The result: in every project
+that does not deploy this bundle, each Bash tool call fired the hook, got `rtk: not found`, and
+failed with exit 127.
+
+Version 0.2.0 wires rtk up workspace-locally instead and never touches your global config. The
+old artifacts are not removed automatically, so a deploy detects them and prints an advisory
+naming each one. Clear them once, on each machine.
+
+**1. Preview what will be removed.**
+
+```bash
+rtk init -g --uninstall --dry-run
+```
+
+```
+[dry-run] would remove RTK.md: ~/.claude/RTK.md
+[dry-run] would remove CLAUDE.md (empty after cleanup): ~/.claude/CLAUDE.md
+[dry-run] would remove RTK hook entry from ~/.claude/settings.json
+[dry-run] would remove OpenCode plugin: ~/.config/opencode/plugins/rtk.ts
+```
+
+Read that output before going further. `rtk init -g` had added an `@RTK.md` line to
+`~/.claude/CLAUDE.md`, and the uninstall **deletes that whole file** when stripping the line
+leaves it empty. If your `~/.claude/CLAUDE.md` holds anything else, skip step 2 and remove the
+four artifacts by hand instead: the rtk entry under `hooks.PreToolUse` in
+`~/.claude/settings.json`, the `@RTK.md` line in `~/.claude/CLAUDE.md`, the file
+`~/.claude/RTK.md`, and the file `~/.config/opencode/plugins/rtk.ts`.
+
+**2. Remove them.**
+
+```bash
+rtk init -g --uninstall
+```
+
+**3. Restart OpenCode**, so it drops the global plugin and loads the workspace-local one.
+
+**4. Redeploy the bundle** in each project that should keep rtk:
+
+```bash
+boff deploy path/to/bun-off-bundles/commons-dev --platform claude --platform opencode
+```
+
+Projects you do not redeploy simply run without rtk, which is the point: no more errors in
+workspaces that never asked for it.
 
 ## Toolchain
 
