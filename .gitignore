@@ -4,17 +4,19 @@
 \#*\#
 .#*
 
-# boff-deployed output (dogfooding)
-.boff/
-.claude/
-.opencode/
-.agents/
-.config/
-.mcp.json
-opencode.json
-GEMINI.md
-.tldr/
-.tldrignore
+# boff-deployed output (dogfooding). Anchored to the repo root: a bare `.opencode/`
+# also matches nested paths, which would swallow bundle content such as
+# commons-dev/plugins/rtk-opencode/.opencode/plugins/rtk.js.
+/.boff/
+/.claude/
+/.opencode/
+/.agents/
+/.config/
+/.mcp.json
+/opencode.json
+/GEMINI.md
+/.tldr/
+/.tldrignore
 
 # Python bytecode (hooks/*.py)
 __pycache__/
