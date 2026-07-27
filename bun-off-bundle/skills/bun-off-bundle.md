@@ -10,7 +10,7 @@ platform's native config locations. A **bundle** is a folder holding that manife
 content files it lists. Your job here: turn a description of what the stack is for into a
 correct, minimal bundle.
 
-This skill is self-contained: everything below is what you need. It documents `bun-off` 0.2.0.
+This skill is self-contained: everything below is what you need. It documents `bun-off` 0.3.1.
 The authoritative reference, should you need a detail this file omits, is
 <https://github.com/atom-sw/bun-off> (its `README.md`).
 
@@ -79,7 +79,8 @@ my-bundle/
   boff.yaml           # the manifest (required)
   README.md           # conventional, not read by boff
   rules/              # <name>.md per entry in rules:
-  skills/             # <name>.md per entry in skills:
+  skills/             # per entry in skills:, either <name>.md or a <name>/ folder
+                      # holding SKILL.md plus the files that skill ships
   slash_commands/     # <name>.md per entry in slash_commands:
   agents/             # <name>.md per entry in agents: (the system-prompt body)
   mcp_servers/
@@ -122,7 +123,8 @@ rules:
     available_on: [claude]         # optional: restrict to these platforms
 
 skills:
-  - review-checklist               # short or long form, same as rules
+  - review-checklist               # short or long form, same as rules; the entry looks the
+                                   # same whichever of the two on-disk forms you wrote
 
 slash_commands:
   - name: review
@@ -215,9 +217,32 @@ Markdown files teaching a repeatable workflow. Deployed to
 `<config_root>/skills/<name>/SKILL.md` on all three platforms (`.claude/`, `.opencode/`,
 `.agents/`).
 
-- **A bundle skill is exactly one file.** There is no way to ship companion assets (a
-  `references/` directory, a script) alongside a skill. Everything the skill needs must be in
-  its body. If it truly needs a file on disk, ship that separately via `plugins:`.
+A skill takes either of two forms on disk, and Bun Off picks the one it finds:
+
+```
+skills/
+  quick-fix.md              a skill that is just its own text
+  review-checklist/         a skill that ships supporting files
+    SKILL.md                the entry point; the name is fixed
+    references/rubric.md    read only when the skill needs it
+    templates/report.md     a file the assistant copies
+```
+
+- **A skill folder ships its own subtree.** Everything under it deploys beside `SKILL.md`
+  keeping its layout, so `.claude/skills/review-checklist/references/rubric.md` is where a
+  relative link in `SKILL.md` expects it. Write those links relative to `SKILL.md`, not to the
+  bundle root.
+- Supporting files are read by the assistant with its own file tools rather than parsed by the
+  platform, so the folder form behaves identically on all three.
+- **Declaring a skill in both forms at once is a load error**, as is a folder with no
+  `SKILL.md`. Neither is a warning: the deploy stops.
+- Build and editor droppings never ship, so tooling run inside a skill folder does not reach
+  the deployed skill: the `__pycache__`, `.git`, `.pytest_cache`, `.ruff_cache`, `.mypy_cache`,
+  and `.ipynb_checkpoints` directories at any depth, and the files `*.pyc`, `*.pyo`,
+  `.DS_Store`, `Thumbs.db`, `*.swp`, `*.swo`, `*~`, `*.orig`, and `*.rej`. Everything else
+  ships, so the author still decides what a skill carries.
+- `boff check` verifies every supporting file, so an edited template is reported as drift, and
+  `boff deploy` removes the ones a bundle stops shipping, pruning a directory that empties.
 - The content, including frontmatter, deploys verbatim. **Always write `name` and
   `description` frontmatter**: Antigravity requires both, and every platform reads the
   description to decide whether to activate the skill.
@@ -343,7 +368,8 @@ plugins:
 ```
 
 Only `source: local` exists today. Use it to vendor a file a platform loads from a fixed path
-that no other artifact targets.
+that no other artifact targets. A file a *skill* needs is not that case: put it in the skill's
+own folder, where it lands beside `SKILL.md` instead of at the workspace root.
 
 ### mise (tool installer)
 
@@ -441,7 +467,7 @@ settings:
 | Artifact | `claude` | `opencode` | `antigravity` |
 |---|---|---|---|
 | `rules` | yes, `globs:` enforced | yes, `globs:` warns | yes, inlined into `GEMINI.md`; `globs:`/`category:` ignored |
-| `skills` | yes | yes | yes |
+| `skills` | yes, supporting files included | yes, supporting files included | yes, supporting files included |
 | `slash_commands` | yes | yes | dropped with a warning |
 | `agents` | yes; no per-agent `pattern`/`ask` (error) | yes, full | yes; per-agent permissions are an error, `model` ignored |
 | `mcp_servers` | yes | yes | yes; remote key is `serverUrl` |
@@ -526,7 +552,11 @@ Close the loop yourself: never report a change as done on the strength of "it lo
 
 **Skills.** A numbered procedure someone could follow. Open with frontmatter whose
 `description` states what it does *and when to use it*. Structure the body as ordered steps,
-and close with a guardrails section naming what the skill must not do.
+and close with a guardrails section naming what the skill must not do. Reach for the folder
+form once `SKILL.md` grows a long reference table or a template worth copying verbatim: keep
+`SKILL.md` the procedure and move that material to `references/` or `templates/`, so it costs
+context only when the step that needs it is reached. A skill that fits in one readable file
+stays one file.
 
 **Slash commands.** Frontmatter `description:`, then two or three sentences delegating to the
 skill and passing `$ARGUMENTS`.
@@ -573,7 +603,9 @@ platform's CLI binary be on `PATH`, which matters wherever the assistants are no
 
 If `boff` is unavailable, verify by hand:
 
-- Every name under `rules:`, `skills:`, `slash_commands:`, `agents:` has its `.md` file.
+- Every name under `rules:`, `slash_commands:`, `agents:` has its `.md` file.
+- Every name under `skills:` resolves to either `skills/<name>.md` or `skills/<name>/SKILL.md`,
+  never both, and every relative link in a `SKILL.md` points inside its own folder.
 - Every `mcp_servers:` entry has a raw JSON file for each platform it is available on, and each
   file parses.
 - Every `event_hooks:` entry has exactly one of `command:` or `script:`, and every `script:`
@@ -591,7 +623,10 @@ If `boff` is unavailable, verify by hand:
 - An unquoted YAML scalar containing a colon. `description: Author bundles: turn a ...` is a
   parse error: quote any value with a colon in it.
 - A `SKILL.md` with no `name` / `description` frontmatter: Antigravity will not load it.
-- Expecting a skill to ship companion files. It cannot: one file, everything inline.
+- A skill declared in both forms at once (`skills/<name>.md` *and* `skills/<name>/`), usually a
+  leftover file after a split. That is an error, as is a skill folder with no `SKILL.md`.
+- A link in a `SKILL.md` written relative to the bundle root. Only the skill's own folder
+  deploys with it: a link must stay inside it.
 - Reserved keys inside `settings:` (`permissions`, `mcpServers`, `permission`, `mcp`,
   `instructions`). Use the dedicated section instead.
 - Expecting `globs:` to scope a rule on OpenCode or Antigravity. Only Claude enforces it.

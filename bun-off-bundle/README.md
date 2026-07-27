@@ -18,8 +18,9 @@ Skill:
 
 - `bun-off-bundle`: the whole authoring reference in one file. How to interview the user before
   writing anything; which artifact type fits which intent (a standing constraint is a rule, a
-  procedure is a skill); the folder layout; an annotated `boff.yaml` reference; per-artifact
-  detail with the on-disk target for each of Claude Code, OpenCode, and Antigravity CLI; the
+  procedure is a skill); the folder layout, including both forms a skill takes on disk and what
+  a skill folder ships; an annotated `boff.yaml` reference; per-artifact detail with the on-disk
+  target for each of Claude Code, OpenCode, and Antigravity CLI; the
   platform capability matrix, marking what a platform drops with a warning and what is a hard
   error; `available_on:`, `extends:`, and the merge rules; house style for writing rules,
   skills, and slash commands; a validation pass; and a common-mistakes checklist.
@@ -56,7 +57,7 @@ workspace target for one; the skill deploys normally.
 
 ## Keeping it current
 
-The skill documents `bun-off` 0.2.0 and names that version in its opening lines. When `boff`
+The skill documents `bun-off` 0.3.1 and names that version in its opening lines. When `boff`
 grows an artifact type, a platform, or an event, update `skills/bun-off-bundle.md`: the
 `boff.yaml` reference, the per-artifact section, the platform capability matrix, and the
 common-mistakes checklist.

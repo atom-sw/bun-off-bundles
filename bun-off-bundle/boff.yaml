@@ -9,7 +9,7 @@ meta:
     constraint belongs in a rule and a procedure belongs in a skill, and it closes with a
     validation pass so the bundle is checked rather than assumed correct. Deploy it in the
     repository where you keep your bundles.
-  version: "0.1.0"
+  version: "0.2.0"
   author: bugcounting.net
 
 skills:
