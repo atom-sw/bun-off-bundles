@@ -14,8 +14,10 @@ Each directory here is a manifest folder you can deploy as-is, or extend with yo
 | [`general-dev`](general-dev/README.md) | `commons-dev` plus the `tldr` (tldr-code) MCP server for project-wide code intelligence. |
 | [`python`](python/README.md) | A Python stack: `uv`, `ruff`, type-checking and `pytest` rules, the `serena` MCP server, a ruff format-on-edit hook, and a packaging skill. |
 | [`python-scripts`](python-scripts/README.md) | A lightweight stack for standalone scripts: stdlib-first rules, `unittest` testing, a ruff format-on-edit hook, and a `new-script` scaffolding skill. |
+| [`bun-off-bundle`](bun-off-bundle/README.md) | A skill that teaches the assistant to author Bun Off bundles: the manifest format, the artifact types, and what each platform supports. |
 
-The bundles form an extension tree, so deploying one installs everything it builds on:
+The development bundles form an extension tree, so deploying one installs everything it builds
+on:
 
 ```
 commons-dev
@@ -25,6 +27,9 @@ commons-dev
 
 `general-dev` extends `commons-dev`; `python` extends `general-dev`; `python-scripts` extends
 `commons-dev` directly (a leaner base, without the project-wide `tldr` code-intelligence server).
+
+`bun-off-bundle` sits outside that tree and extends nothing: a workspace for authoring manifests
+has no reason to inherit a coding baseline. Deploy it alongside another bundle if you want both.
 
 ## 🚀 Usage
 
