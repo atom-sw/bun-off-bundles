@@ -55,10 +55,17 @@ has no reason to inherit a coding baseline. Deploy it alongside another bundle i
 while the rest of the repository moves:
 
 ```yaml
-extends: https://github.com/atom-sw/bun-off-bundles.git/writing@writing/0.1.0
+extends: https://github.com/atom-sw/bun-off-bundles.git/writing@writing_0.1.0
 ```
 
-Omit the `@<tag>` to track the latest publication. `git tag -l 'writing/*'` lists the versions
+A tag URL copied straight from the address bar works too, on the command line as much as in
+`extends:`:
+
+```bash
+boff deploy https://github.com/atom-sw/bun-off-bundles/tree/writing_0.1.0/writing --platform claude
+```
+
+Omit the `@<tag>` to track the latest publication. `git tag -l 'writing_*'` lists the versions
 of one bundle. See [CONTRIBUTING.md](CONTRIBUTING.md) on `dev` for how publication works.
 
 ## 🚀 Usage
