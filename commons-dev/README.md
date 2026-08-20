@@ -17,8 +17,6 @@ Rules (concise, one concern each, drawn from the Claude Code and OpenCode best-p
 - `vcs-etiquette`: use `gh`, branch before committing, commit only when asked.
 - `commit-conventions`: write the commit summary in Conventional Commits format (types, scope, breaking-change marker).
 - `security-basics`: no hard-coded secrets, validate input, least privilege.
-- `documentation-style`: active voice, colons over dashes, disciplined arrows and emojis.
-- `writing-docs`: document the non-obvious, keep docs in sync, lead with the point.
 - `context-management`: keep the context window focused via subagents, `/clear`, and scoped `/compact`.
 
 Skill (loaded on demand):
@@ -32,6 +30,21 @@ MCP server:
 Command-output compression (see [Context management](#context-management)):
 
 - an rtk `PreToolUse` hook on Claude, and the rtk plugin on OpenCode.
+
+## Prose style moved out in 0.3.0
+
+`documentation-style` and `writing-docs` are no longer here. They now live in the
+[`writing`](../writing/README.md) bundle, together with an American-English rule and a
+plain-technical-writing skill, because prose style is not specific to a project and is better
+installed once per machine:
+
+```bash
+boff deploy path/to/bun-off-bundles/writing --platform claude --global
+```
+
+`commons-dev` keeps only coding discipline. If you deployed 0.2.0 and want the prose rules
+back, deploy `writing` as well; a re-deploy of `commons-dev` removes the two rule files it no
+longer produces.
 
 ## Context management
 

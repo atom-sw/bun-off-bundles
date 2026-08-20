@@ -1,0 +1,23 @@
+meta:
+  name: writing-simple-english
+  description: The writing bundle, with Simple English applied to everything rather than on request.
+  long_description: |
+    For a project whose documentation must read plainly without anyone having to ask. It adds
+    the condensed Simple English rules as an always-on rule, so short sentences, simple tenses,
+    and one meaning per word become the default for every piece of prose. The full skill, from
+    the `writing` bundle, stays available for a deeper pass over a passage that needs it.
+
+    Deploy it per project on top of a global `writing` install, or stack the two to keep
+    everything workspace-local. Prefer plain `writing` where the style should stay opt-in.
+  version: "0.1.0"
+  author: bugcounting.net
+
+# Deliberately does NOT `extends: ../writing`. The two are installed at different scopes --
+# `writing` once per machine, this one per project -- so inheriting it would write every base
+# rule and the whole skill folder into both scopes, and the assistant would load each of them
+# twice. Stack them instead when you want both in one workspace:
+#
+#     boff deploy path/to/writing path/to/writing-simple-english --platform claude
+#
+rules:
+  - simple-english

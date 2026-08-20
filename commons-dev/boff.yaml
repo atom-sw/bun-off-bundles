@@ -8,7 +8,7 @@ meta:
     conveniences: on-demand documentation checks, quick access to current library reference,
     and terser command output. Use it as the common footing under any project, whatever the
     language or tools.
-  version: "0.2.0"
+  version: "0.3.0"
   author: bugcounting.net
 
 rules:
@@ -21,8 +21,6 @@ rules:
   - vcs-etiquette
   - commit-conventions
   - security-basics
-  - documentation-style
-  - writing-docs
   - context-management
   # Claude and OpenCode intercept commands through rtk automatically (see settings
   # and plugins below); antigravity has no interception point, so inline the manual
