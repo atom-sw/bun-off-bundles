@@ -1,0 +1,19 @@
+meta:
+  name: general-dev
+  description: Language-agnostic support for AI-assisted work across a whole codebase.
+  long_description: |
+    For developers working in a real, multi-file codebase in any language. On top of a
+    foundation of sound engineering habits, it gives the assistant a compressed map of the
+    whole project, so it can navigate and reason about code that spans many files instead of
+    only the one in front of it. Reach for it when the work touches much of a repository and
+    the assistant needs to keep the whole picture in view.
+  version: "0.2.0"
+  author: bugcounting.net
+
+extends: ../commons-dev
+
+mcp_servers:
+  - tldr
+
+mise:
+  - mise/mise.toml

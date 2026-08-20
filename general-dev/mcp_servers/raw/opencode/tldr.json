@@ -1,0 +1,5 @@
+{
+  "type": "local",
+  "command": ["tldr-mcp", "--project", "."],
+  "enabled": true
+}

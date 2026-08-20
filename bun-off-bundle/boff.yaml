@@ -1,0 +1,21 @@
+meta:
+  name: bun-off-bundle
+  description: "Author Bun Off bundles: turn a description of a stack into a working boff.yaml manifest folder."
+  long_description: |
+    For anyone building their own Bun Off bundle. It teaches the assistant the whole manifest
+    format: the folder layout, every artifact type, where each one lands on Claude Code,
+    OpenCode, and Antigravity CLI, and which artifacts a given platform cannot express. Beyond
+    the schema it carries the judgment that makes a bundle good, namely when a standing
+    constraint belongs in a rule and a procedure belongs in a skill, and it closes with a
+    validation pass so the bundle is checked rather than assumed correct. Deploy it in the
+    repository where you keep your bundles.
+  version: "0.2.0"
+  author: bugcounting.net
+
+skills:
+  - bun-off-bundle
+
+slash_commands:
+  # Claude Code invokes the skill directly; OpenCode gets an explicit entry point.
+  - name: bun-off-bundle
+    available_on: [opencode]

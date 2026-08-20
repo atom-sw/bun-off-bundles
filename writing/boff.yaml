@@ -1,0 +1,32 @@
+meta:
+  name: writing
+  description: "Prose style for the words an assistant writes: docs, comments, and commit messages."
+  long_description: |
+    For developers who care how their documentation reads. It sets the house style for every
+    piece of prose an assistant produces, from a README down to a commit message: one spelling
+    variant, active voice, a consistent hand with punctuation, and documentation written for
+    the next reader rather than for the author. It also carries a plain-technical-writing
+    skill you can call on when a passage needs to be tightened.
+
+    Nothing here is specific to a language or a toolchain, and none of it belongs to one
+    project, so it is meant to be installed once per machine with `boff deploy --global`.
+  version: "0.1.0"
+  author: bugcounting.net
+
+rules:
+  - american-english
+  - documentation-style
+  - writing-docs
+
+skills:
+  # Vendored from https://github.com/AminBlg/SimpleEnglish (MIT); see
+  # skills/simple-english/UPSTREAM.md for the pinned commit and the license notice.
+  # Left model-invocable on purpose: its own description already names the cues that should
+  # trigger it, so it stays available without an always-on cost. Deploy the
+  # `writing-simple-english` bundle in a project to make it apply to everything instead.
+  - simple-english
+
+output_styles:
+  # Claude Code only, and deliberately NOT selected: defining a style does not activate it.
+  # Pick it in `/config` for a session given over to writing. See the README.
+  - simple-english

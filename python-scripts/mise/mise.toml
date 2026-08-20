@@ -1,0 +1,6 @@
+[tools]
+# Dev tools only: ruff (format + lint) and pyright (type check). The bundle pins no Python
+# runtime and requires no uv: a dependency-free script runs with plain python. These merge
+# under .config/mise/conf.d/ with commons-dev's rtk drop-in.
+ruff = "latest"
+"npm:pyright" = "latest"

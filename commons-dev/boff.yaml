@@ -1,0 +1,74 @@
+meta:
+  name: commons-dev
+  description: Language-agnostic coding discipline and workflow habits for AI-assisted development.
+  long_description: |
+    For developers who want an AI assistant to write disciplined code in any language. It
+    gathers a compact set of workflow habits, spanning testing, commits, documentation,
+    security, and keeping the assistant's attention on the task, and adds a few quiet
+    conveniences: on-demand documentation checks, quick access to current library reference,
+    and terser command output. Use it as the common footing under any project, whatever the
+    language or tools.
+  version: "0.3.0"
+  author: bugcounting.net
+
+rules:
+  - verify-your-work
+  - writing-tests
+  - lint-exceptions
+  - explore-then-code
+  - match-project-conventions
+  - precise-context
+  - vcs-etiquette
+  - commit-conventions
+  - security-basics
+  - context-management
+  # Claude and OpenCode intercept commands through rtk automatically (see settings
+  # and plugins below); antigravity has no interception point, so inline the manual
+  # rtk usage guidance into its GEMINI.md instead.
+  - name: rtk-usage
+    available_on: [antigravity]
+
+skills:
+  - doc-check
+
+mcp_servers:
+  - context7
+
+settings:
+  claude:
+    # rtk interception, scoped to this workspace: the project-local equivalent of the
+    # PreToolUse hook `rtk init -g` would patch into ~/.claude/settings.json. Keeping it
+    # here means rtk stays opt-in per project and `boff clean` removes it again.
+    # The `command -v` guard makes the hook fail open, both before `mise install` has
+    # provisioned rtk and on any rtk error: a token optimizer must never block a command.
+    hooks:
+      PreToolUse:
+        - matcher: Bash
+          hooks:
+            - type: command
+              command: "command -v rtk >/dev/null 2>&1 && rtk hook claude || exit 0"
+  opencode:
+    plugin:
+      - "@tarquinen/opencode-dcp"
+
+plugins:
+  # rtk's own installer refuses a workspace-local OpenCode plugin, so the bundle vendors
+  # the file and drops it into .opencode/plugins/ itself.
+  rtk-opencode:
+    install:
+      opencode:
+        source: local
+        path: plugins/rtk-opencode
+
+mise:
+  - mise/mise.toml
+
+hooks:
+  post_install:
+    - script: mise-install       # install the toolchain
+    - script: rtk-global-check   # warn if an older bundle version left rtk installed globally
+
+event_hooks:
+  - name: mise-install
+    event: session_start
+    command: "mise trust 2>/dev/null; mise install 2>/dev/null || true"
