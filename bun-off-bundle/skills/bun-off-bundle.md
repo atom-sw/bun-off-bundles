@@ -1,6 +1,6 @@
 ---
 name: bun-off-bundle
-description: Author a bun-off (boff) bundle: a boff.yaml manifest folder that deploys rules, skills, slash commands, agents, MCP servers, permissions, settings, and hooks to Claude Code, OpenCode, and Antigravity CLI. Use when asked to create, extend, review, or fix a bun-off bundle or a boff.yaml manifest.
+description: "Author a bun-off (boff) bundle: a boff.yaml manifest folder that deploys rules, skills, slash commands, agents, MCP servers, permissions, settings, and hooks to Claude Code, OpenCode, and Antigravity CLI. Use when asked to create, extend, review, or fix a bun-off bundle or a boff.yaml manifest."
 ---
 
 # Authoring a bun-off bundle
