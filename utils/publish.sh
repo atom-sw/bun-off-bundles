@@ -258,14 +258,24 @@ if [[ -n "$MESSAGE_FILE" ]]; then
     [[ -f "$MESSAGE_FILE" ]] || die "no such file: $MESSAGE_FILE"
     cat "$MESSAGE_FILE" > "$MSG_FILE"
 else
+    # Naming every bundle keeps the subject useful, but past a handful it stops fitting on one
+    # line, so the list moves into the body instead.
+    LIST_IN_BODY=0
     if [[ -n "$MESSAGE" ]]; then
         SUBJECT="$MESSAGE"
-    elif (( ${#SUMMARY[@]} )); then
+    elif (( ${#SUMMARY[@]} == 0 )); then
+        SUBJECT="Publish (no bundle changed)."
+    elif (( ${#SUMMARY[@]} <= 3 )); then
         SUBJECT="Publish $(printf '%s, ' "${SUMMARY[@]}" | sed 's/, $//')."
     else
-        SUBJECT="Publish (no bundle changed)."
+        SUBJECT="Publish ${#SUMMARY[@]} bundles."
+        LIST_IN_BODY=1
     fi
     { printf '%s\n\n' "$SUBJECT"
+      if [[ "$LIST_IN_BODY" -eq 1 ]]; then
+          printf '  %s\n' "${SUMMARY[@]}"
+          printf '\n'
+      fi
       if [[ -n "$PREV_SOURCE" ]]; then
           git log --format='  %h %s' "${PREV_SOURCE}..${SOURCE_SHA}"
       else
