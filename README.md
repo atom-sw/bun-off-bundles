@@ -48,6 +48,19 @@ boff deploy path/to/bun-off-bundles/python --platform claude
 `bun-off-bundle` sits outside that tree and extends nothing: a workspace for authoring manifests
 has no reason to inherit a coding baseline. Deploy it alongside another bundle if you want both.
 
+## 📌 Pinning a bundle
+
+`main` is generated: it holds one commit per publication, built from `dev` by
+`utils/publish.sh`. Each bundle is tagged with its own version, so you can pin one and stay put
+while the rest of the repository moves:
+
+```yaml
+extends: https://github.com/atom-sw/bun-off-bundles.git/writing@writing/0.1.0
+```
+
+Omit the `@<tag>` to track the latest publication. `git tag -l 'writing/*'` lists the versions
+of one bundle. See [CONTRIBUTING.md](CONTRIBUTING.md) on `dev` for how publication works.
+
 ## 🚀 Usage
 
 Clone this repo, then deploy a bundle into your project's workspace:

@@ -1,0 +1,25 @@
+# .mergeignore — paths kept off the published branch.
+#
+# utils/publish.sh reads this file from the source branch (`dev`) and drops every
+# path it matches from the published snapshot. It always drops this file itself,
+# so there is no need to list it.
+#
+# Each non-comment line is a git pathspec. A trailing slash is stripped, and the
+# line is prefixed with `:(glob)` unless it already begins with `:`. That means:
+#
+#   utils        a bare directory matches everything beneath it
+#   *.md         matches top-level files only, because `*` does not cross a `/`
+#   docs/**      use `**` to recurse
+#
+# A path that no tracked file matches is a harmless no-op, so entries may be
+# listed defensively before the file they name exists.
+#
+# Never list a bundle directory, `README.md`, or `LICENSE`: publish.sh refuses to
+# build a snapshot that omits them, and every bundle is validated after filtering.
+
+# Maintenance tooling: only ever runs on the development branch.
+utils
+
+# Development notes and contributor documentation.
+CONTRIBUTING.md
+TODO.md

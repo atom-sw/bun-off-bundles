@@ -12,7 +12,8 @@ project. They are not written or maintained here. Edit them upstream, then re-sy
 | Upstream version | 1.3.0 |
 | Vendored on | 2026-08-20 |
 
-Refresh with `utils/sync-simple-english.sh` from the root of this repository. Run it with
+Refresh with `utils/sync-simple-english.sh` from the root of this repository, on the `dev`
+branch (the script is maintenance tooling and is not published to `main`). Run it with
 `--check` first to see whether upstream has moved.
 
 ## License
