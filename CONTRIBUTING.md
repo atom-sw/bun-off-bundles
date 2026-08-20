@@ -38,12 +38,20 @@ pushed yet.
 ## Versions and tags
 
 Every bundle carries its own `meta.version`. When a publication includes changes to a bundle,
-the script tags that bundle `<bundle>/<version>` — for example `writing/0.1.0` — so a user can
+the script tags that bundle `<bundle>_<version>` — for example `writing_0.1.0` — so a user can
 pin it:
 
 ```yaml
-extends: https://github.com/atom-sw/bun-off-bundles.git/writing@writing/0.1.0
+extends: https://github.com/atom-sw/bun-off-bundles.git/writing@writing_0.1.0
 ```
+
+**A tag must contain neither `/` nor `@`.** Both break the URL forms Bun Off accepts. A
+`/tree/<ref>/<subdir>` browser URL — the one a user copies out of the address bar — gives Bun Off
+exactly one path segment for the ref, so a slashed tag splits in the wrong place and the rest of
+it becomes the subdirectory. And Bun Off partitions a manifest reference on its *first* `@`, so an
+`@` inside a tag swallows the rest of the path. The underscore is the separator because no bundle
+name contains one, which keeps `git tag -l '<bundle>_*'` exact even for `writing` against
+`writing-simple-english`.
 
 **Bump `meta.version` in the same change that edits a bundle.** If a bundle changed since the
 last publication and its tag already exists, publishing refuses and names it. There is no

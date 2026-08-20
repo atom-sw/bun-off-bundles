@@ -15,9 +15,12 @@
 # working tree never moves. `update-ref` is given the expected old value, making it a
 # compare-and-swap: a concurrent update aborts the publication rather than losing it.
 #
-# Each bundle is tagged `<bundle>/<version>` from its own `meta.version`, so a user can pin one:
+# Each bundle is tagged `<bundle>_<version>` from its own `meta.version`, so a user can pin one:
 #
-#     extends: https://github.com/atom-sw/bun-off-bundles.git/writing@writing/0.1.0
+#     extends: https://github.com/atom-sw/bun-off-bundles.git/writing@writing_0.1.0
+#
+# The separator must be neither `/` nor `@`: a `/tree/<ref>/<subdir>` browser URL gives Bun Off
+# exactly one path segment for the ref, and Bun Off splits a manifest reference on its first `@`.
 #
 # A bundle whose files changed must have its version bumped, or publishing refuses. That is the
 # only thing keeping the tags honest, since this repository has no changelog.
@@ -243,7 +246,7 @@ NEW_TAGS=()
 SUMMARY=()
 for bundle in "${CHANGED[@]}"; do
     version="$(bundle_version "$SOURCE_REF" "$bundle")"
-    tag="${bundle}/${version}"
+    tag="${bundle}_${version}"
     if git rev-parse --verify --quiet "refs/tags/${tag}" > /dev/null; then
         MSG="bundle '$bundle' changed since the last publication but is still at version $version — bump meta.version in ${bundle}/boff.yaml"
         if [[ "$FORCE" -eq 1 ]]; then warn "$MSG (no tag will be created)"; else die "$MSG"; fi
