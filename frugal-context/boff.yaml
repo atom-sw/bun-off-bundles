@@ -1,0 +1,77 @@
+meta:
+  name: frugal-context
+  description: Scope discipline that keeps an agentic coding run cheap and its context accurate.
+  long_description: |
+    For anyone who watches an assistant answer a question about one file by reading forty. It
+    keeps the work where the request pointed: start at the files you named, widen one notch at
+    a time and say why, read the slice rather than the file, and report the conclusion instead
+    of the evidence. A skill handles the other end of the problem, when a session is already
+    full and something has to give.
+
+    The point is accuracy as much as cost. A context window that fills with irrelevant code
+    makes the model worse at recalling the code that matters, so a frugal run is also a more
+    reliable one. Reach for this bundle in any project, in any language, beside whatever stack
+    you already deploy.
+  version: "0.1.0"
+  author: bugcounting.net
+
+# Deliberately extends nothing. The discipline here is orthogonal to every other bundle: it
+# belongs to no language, and inheriting a coding baseline would tie it to one. Stack it
+# beside whatever you already deploy:
+#
+#     boff deploy path/to/commons-dev path/to/frugal-context --platform claude
+#
+# The rule names are all distinct from commons-dev's `context-management`, `precise-context`,
+# and `explore-then-code`, so the two merge without shadowing each other.
+
+rules:
+  # No `globs:` on any of these, on purpose. They must hold on every turn, only Claude Code
+  # can scope a rule at all, and a path-scoped Claude rule drops out of context after a
+  # compaction until a matching file is read again -- exactly the wrong failure mode here.
+  - scope-ratchet
+  - read-narrowly
+  - report-conclusions
+  - delegate-deliberately
+
+skills:
+  - context-triage
+
+slash_commands:
+  # Claude Code invokes the skill directly; OpenCode gets an explicit entry point.
+  # Antigravity CLI discovers no author-supplied command directory.
+  - name: context-triage
+    available_on: [opencode]
+
+output_styles:
+  # Claude Code only, and deliberately NOT selected: defining a style does not activate it.
+  # Pick it in `/config` for a session where terseness matters more than explanation.
+  # Scoped explicitly: neither other platform has an output-style surface, and without this
+  # they warn on every deploy.
+  - name: frugal
+    available_on: [claude]
+
+settings:
+  claude:
+    # Verified against Claude Code 2.1.241. Values must be strings.
+    env:
+      # Cap MCP tool responses at the threshold Claude Code itself warns above (default 25000).
+      MAX_MCP_OUTPUT_TOKENS: "10000"
+      # Make Glob honor .gitignore, so build output and vendored trees stay out of results.
+      CLAUDE_CODE_GLOB_NO_IGNORE: "false"
+      # Stop idle check-ins, which resend the whole context to ask whether you are still there.
+      CLAUDE_CODE_GOAL_CHECKIN_MINUTES: "0"
+    #
+    # Deliberately absent: `hooks.PreToolUse`. commons-dev puts rtk's command-output filter
+    # there, and boff's JSON merge replaces lists wholesale, so a second entry would silently
+    # drop rtk's whenever the two bundles are stacked. See the README for the knobs left out
+    # because they change behavior rather than cap it.
+  opencode:
+    # Verified against the OpenCode 1.18.7 binary, which is the v1 config shape. OpenCode v2
+    # replaces `compaction.prune` with `keep`/`buffer`; drop this block on a v2 install.
+    tool_output:
+      # Truncate oversized tool output to disk and return a preview (defaults 2000 / 51200).
+      max_lines: 500
+      max_bytes: 16384
+    compaction:
+      # Drop superseded tool output from long conversations. Ships off by default.
+      prune: true
