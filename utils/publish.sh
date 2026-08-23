@@ -114,17 +114,23 @@ previous_source() {
     git log -1 --format=%B "$1" 2> /dev/null | sed -n 's/^Source-Commit: *\([0-9a-f]\{7,40\}\) *$/\1/p' | head -1
 }
 
-# Remotes whose copy of the published branch holds commits the local one does not.
+# Remotes whose copy of the published branch holds commits the local one does not, reported as
+# `<remote> <kind> <local-only count> <remote-only count>`. The counts are what makes a
+# divergence diagnosable: they say how much history each side holds that the other does not.
 release_branch_lag() {
-    local commit="$1" remote rref
+    local commit="$1" remote rref counts
     for remote in $(git remote); do
         rref="refs/remotes/${remote}/${REL_BRANCH}"
         git rev-parse --verify --quiet "$rref" > /dev/null || continue
         if git merge-base --is-ancestor "$rref" "$commit"; then continue; fi
+        # `--left-right --count` prints "<local-only>\t<remote-only>". It needs no merge base,
+        # which matters here: a publication history shares no ancestry with a development one,
+        # so the two sides of a stale `$REL_BRANCH` are routinely unrelated rather than forked.
+        counts="$(git rev-list --left-right --count "${commit}...${rref}" | tr '\t' ' ')"
         if git merge-base --is-ancestor "$commit" "$rref"; then
-            printf '%s behind\n' "$remote"
+            printf '%s behind %s\n' "$remote" "$counts"
         else
-            printf '%s diverged\n' "$remote"
+            printf '%s diverged %s\n' "$remote" "$counts"
         fi
     done
 }
@@ -189,11 +195,20 @@ if git rev-parse --verify --quiet "refs/heads/${REL_BRANCH}" > /dev/null; then
     TIP="$(git rev-parse --verify "refs/heads/${REL_BRANCH}")"
     PARENT="$TIP"
 
-    while read -r LAG_REMOTE LAG_KIND; do
+    while read -r LAG_REMOTE LAG_KIND LAG_OURS LAG_THEIRS; do
         [[ -z "$LAG_REMOTE" ]] && continue
-        LAG_MSG="'$REL_BRANCH' is $LAG_KIND '${LAG_REMOTE}/${REL_BRANCH}': the publication would be built on an outdated history."
+        LAG_REF="${LAG_REMOTE}/${REL_BRANCH}"
         if [[ "$LAG_KIND" == "behind" ]]; then
-            LAG_MSG+=" Catch up first: git fetch $LAG_REMOTE && git branch -f $REL_BRANCH ${LAG_REMOTE}/${REL_BRANCH}"
+            LAG_MSG="'$REL_BRANCH' is behind '$LAG_REF' by $LAG_THEIRS commit(s): the publication would be built on an outdated history."
+            LAG_MSG+=$'\n'"  catch up:  git fetch $LAG_REMOTE && git branch -f $REL_BRANCH $LAG_REF"
+        else
+            LAG_MSG="'$REL_BRANCH' has diverged from '$LAG_REF': the publication would be built on an outdated history."
+            LAG_MSG+=$'\n'"  '$REL_BRANCH' holds $LAG_OURS commit(s) '$LAG_REF' does not, and '$LAG_REF' holds $LAG_THEIRS that it does not."
+            LAG_MSG+=$'\n'"  '$REL_BRANCH' is generated, one commit per publication, and is never committed to by hand,"
+            LAG_MSG+=$'\n'"  so local-only commits on it are almost always a stale pre-publication branch."
+            LAG_MSG+=$'\n'"    inspect them:  git log --oneline $REL_BRANCH ^$LAG_REF"
+            LAG_MSG+=$'\n'"    discard them:  git fetch $LAG_REMOTE && git branch -f $REL_BRANCH $LAG_REF"
+            LAG_MSG+=$'\n'"    keep them:     re-run with --force to publish onto the local history"
         fi
         if [[ "$FORCE" -eq 1 ]]; then warn "$LAG_MSG"; else die "$LAG_MSG"; fi
     done < <(release_branch_lag "$TIP")
