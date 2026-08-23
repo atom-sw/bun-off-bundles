@@ -14,6 +14,7 @@ Each directory here is a manifest folder you can deploy as-is, or extend with yo
 | [`general-dev`](general-dev/README.md) | `commons-dev` plus the `tldr` (tldr-code) MCP server for project-wide code intelligence. |
 | [`python`](python/README.md) | A Python stack: `uv`, `ruff`, type-checking and `pytest` rules, the `serena` MCP server, a ruff format-on-edit hook, and a packaging skill. |
 | [`python-scripts`](python-scripts/README.md) | A lightweight stack for standalone scripts: stdlib-first rules, `unittest` testing, a ruff format-on-edit hook, and a `new-script` scaffolding skill. |
+| [`frugal-context`](frugal-context/README.md) | Scope discipline that keeps a run cheap and accurate: start at the files you named, widen one notch at a time, and report conclusions rather than evidence. |
 | [`bun-off-bundle`](bun-off-bundle/README.md) | A skill that teaches the assistant to author Bun Off bundles: the manifest format, the artifact types, and what each platform supports. |
 | [`writing`](writing/README.md) | Prose style for what the assistant writes: American English, documentation style, and a plain-technical-writing skill. Install it globally. |
 | [`writing-simple-english`](writing-simple-english/README.md) | One always-on rule that applies the Simple English style to all prose in a project, rather than only on request. Deploy beside `writing`. |
@@ -27,26 +28,23 @@ commons-dev                          development
 └── python-scripts
 
 writing                              prose
+frugal-context                       efficiency
 bun-off-bundle                       authoring
 ```
 
 `general-dev` extends `commons-dev`; `python` extends `general-dev`; `python-scripts` extends
 `commons-dev` directly (a leaner base, without the project-wide `tldr` code-intelligence server).
 
-`writing` and `bun-off-bundle` are separate roots and extend nothing.
-`writing-simple-english` is a companion to `writing` rather than a child: it holds one always-on
+`writing`, `frugal-context`, and `bun-off-bundle` are separate roots and extend nothing.
+`writing-simple-english` is a companion to `writing`: it holds one always-on
 rule and deliberately does not extend it, because the two are installed at different scopes.
-Prose style is not specific to a project or a language, so `writing` is meant to be installed
-once per machine while the development bundles are deployed per project:
+Bundle `writing` is usually installed once per machine, while the development bundles are deployed per project:
 
 ```bash
 boff deploy path/to/bun-off-bundles/writing --platform claude --global
 cd path/to/your/project
 boff deploy path/to/bun-off-bundles/python --platform claude
 ```
-
-`bun-off-bundle` sits outside that tree and extends nothing: a workspace for authoring manifests
-has no reason to inherit a coding baseline. Deploy it alongside another bundle if you want both.
 
 ## 📌 Pinning a bundle
 
