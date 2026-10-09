@@ -10,13 +10,14 @@ meta:
 
     Nothing here is specific to a language or a toolchain, and none of it belongs to one
     project, so it is meant to be installed once per machine with `boff deploy --global`.
-  version: "0.1.0"
+  version: "0.2.0"
   author: bugcounting.net
 
 rules:
   - american-english
   - documentation-style
   - writing-docs
+  - tool-names
 
 skills:
   # Vendored from https://github.com/AminBlg/SimpleEnglish (MIT); see
