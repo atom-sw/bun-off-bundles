@@ -20,6 +20,8 @@ Rules, always in context:
   hierarchy, emoji only to decorate a README.
 - `writing-docs`: document the intent and the non-obvious, lead with the point, keep the
   documentation in step with the code, and prefer an example over a paragraph.
+- `tool-names`: the product name in prose (Bun Off), the command in code formatting
+  (`boff`), and the package name where a registry or installer needs it (`bun-off`).
 
 A skill, loaded only when it is wanted:
 

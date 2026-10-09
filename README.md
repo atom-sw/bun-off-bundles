@@ -18,7 +18,7 @@ Each directory here is a manifest folder you can deploy as-is, or extend with yo
 | [`lean-tutorial`](lean-tutorial/README.md) | `lean-base` plus a tutoring style for co-writing a literate Lean tutorial with a learner: one concept per step, the learner proves first. |
 | [`frugal-context`](frugal-context/README.md) | Scope discipline that keeps a run cheap and accurate: start at the files you named, widen one notch at a time, and report conclusions rather than evidence. |
 | [`bun-off-bundle`](bun-off-bundle/README.md) | A skill that teaches the assistant to author Bun Off bundles: the manifest format, the artifact types, and what each platform supports. |
-| [`writing`](writing/README.md) | Prose style for what the assistant writes: American English, documentation style, and a plain-technical-writing skill. Install it globally. |
+| [`writing`](writing/README.md) | Prose style for what the assistant writes: American English, documentation style, tool naming, and a plain-technical-writing skill. Install it globally. |
 | [`writing-simple-english`](writing-simple-english/README.md) | One always-on rule that applies the Simple English style to all prose in a project, rather than only on request. Deploy beside `writing`. |
 
 The development bundles form an extension tree, so deploying one installs everything it builds
