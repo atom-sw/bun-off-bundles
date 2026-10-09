@@ -202,10 +202,9 @@ frontmatter unless you want it on disk.
 | `antigravity` | Inlined into a generated `GEMINI.md`, one `## <name>` section per rule, in manifest order. `category:` is ignored. |
 
 `globs:` scopes a rule to matching files. **Only Claude enforces it**: Bun Off prepends a
-`globs:` frontmatter block to the rule file. OpenCode and Antigravity deploy the rule unscoped
-and log a warning, because neither supports conditional, path-scoped loading. Two caveats: a
-glob pattern must not contain a double-quote character, and Claude honors `globs:` only for
-workspace rules, which is what Bun Off writes.
+`paths:` frontmatter block (a YAML list of the patterns) to the rule file, the key Claude Code
+reads for path-scoped rules. OpenCode and Antigravity deploy the rule unscoped and log a
+warning, because neither supports conditional, path-scoped loading.
 
 Antigravity never loads `.agents/rules/*.md` and does not expand `@`-includes, which is why
 rules are inlined. Bun Off writes `GEMINI.md`, never `AGENTS.md`: `AGENTS.md` is OpenCode's
@@ -249,6 +248,19 @@ skills/
 - Write the description as a trigger: state what the skill does *and when to use it*.
 - Add `disable-model-invocation: true` to the frontmatter for a scaffolding skill that should
   fire only on an explicit request. Pair it with a slash command so users have an entry point.
+- **Reuse a published skill instead of copying it.** A skill or rule entry with
+  `from: <git URL>` resolves its name inside that repository directory instead of the local
+  `skills/` or `rules/`. Pin a tag or commit, and reuse the URL with a YAML anchor:
+
+  ```yaml
+  skills:
+    - name: lean-proof
+      from: &lean-fro https://github.com/leanprover/skills/tree/7d3da0282e7b724b07620e45cf212f2e05e19334/skills
+    - { name: lean-mwe, from: *lean-fro }
+  ```
+
+  Prefer this to a platform's plugin marketplace when the repository uses the `SKILL.md`
+  layout: the fetched skill deploys to all three platforms.
 
 ### Slash commands
 

@@ -8,7 +8,7 @@ meta:
     request, and never writes ahead. A second skill fixes the shape of a chapter written as a
     literate Lean file and rendered with Verso, so the woven document teaches what the session
     taught.
-  version: "0.1.0"
+  version: "0.2.0"
   author: bugcounting.net
 
 extends: ../lean-base

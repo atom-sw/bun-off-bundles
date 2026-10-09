@@ -7,9 +7,10 @@ meta:
     and it sets a short discipline for Lean work: check after every edit, look names up rather
     than recall them, fix linter warnings rather than silence them, and never leave a `sorry`
     unreported. Skills set up and run the project's linters and weave its Verso literate site,
-    and on Claude Code the Lean FRO skills plugin comes linked by reference. It builds on
+    and the Lean FRO skills (proof method, MWEs, toolchain bisection, Lean and Mathlib
+    contribution conventions) come fetched from their own repository. It builds on
     `general-dev`, so the language-agnostic workflow habits come with it.
-  version: "0.1.0"
+  version: "0.2.0"
   author: bugcounting.net
 
 # Extends general-dev like the other language stacks: its workflow rules apply to Lean as
@@ -20,9 +21,22 @@ rules:
   - name: lean
     category: lean-dev
 
+# The Lean FRO skills are fetched from their repository rather than copied here, pinned to
+# one commit so a deploy is reproducible. Bump the SHA to take upstream changes; `boff check`
+# then reports which skills changed until the next deploy.
 skills:
   - lean-lint
   - lean-weave
+  - name: lean-proof
+    from: &lean-fro https://github.com/leanprover/skills/tree/7d3da0282e7b724b07620e45cf212f2e05e19334/skills
+  - { name: lean-mwe, from: *lean-fro }
+  - { name: lean-bisect, from: *lean-fro }
+  - { name: lean-setup, from: *lean-fro }
+  - { name: lean-pr, from: *lean-fro }
+  - { name: mathlib-build, from: *lean-fro }
+  - { name: mathlib-pr, from: *lean-fro }
+  - { name: mathlib-review, from: *lean-fro }
+  - { name: nightly-testing, from: *lean-fro }
 
 mcp_servers:
   - lean-lsp
@@ -40,15 +54,3 @@ permissions:
     - { tool: bash, pattern: "lean --version", available_on: [claude, opencode] }
     - { tool: bash, pattern: "lake --version", available_on: [claude, opencode] }
     - { tool: mcp, pattern: "lean-lsp", available_on: [claude] }
-
-# Link the Lean FRO skills by reference instead of copying them: Claude Code offers to
-# install the marketplace plugin when the workspace is trusted.
-settings:
-  claude:
-    extraKnownMarketplaces:
-      leanprover:
-        source:
-          source: github
-          repo: leanprover/skills
-    enabledPlugins:
-      lean@leanprover: true
