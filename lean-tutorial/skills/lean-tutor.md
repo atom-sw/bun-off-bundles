@@ -28,6 +28,9 @@ deliverable; the code is the evidence.
 
 ## Guardrails
 
+- This skill's pacing overrides the general workflow rules while you tutor. Where
+  `precise-context` says to pick an obvious default and proceed, or `explore-then-code` says
+  to make a one-line change directly, propose it and wait for the learner instead.
 - Never write ahead: no extra definitions, lemmas, or chapters beyond the agreed step.
 - Never replace a proof the user wrote with a "better" one without asking; suggest it.
 - Prefer explicit tactic proofs over automation (`simp`, `omega`, `decide`, `grind`) until

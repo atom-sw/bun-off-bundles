@@ -5,21 +5,23 @@ meta:
     For anyone writing Lean 4, whether programs or proofs. It connects the assistant to Lean's
     language server, so it reads the real goal state and diagnostics instead of guessing them,
     and it sets a short discipline for Lean work: check after every edit, look names up rather
-    than recall them, and never leave a `sorry` unreported. A skill builds the project and
-    weaves its Verso literate site, and on Claude Code the Lean FRO skills plugin comes linked
-    by reference.
+    than recall them, fix linter warnings rather than silence them, and never leave a `sorry`
+    unreported. Skills set up and run the project's linters and weave its Verso literate site,
+    and on Claude Code the Lean FRO skills plugin comes linked by reference. It builds on
+    `general-dev`, so the language-agnostic workflow habits come with it.
   version: "0.1.0"
   author: bugcounting.net
 
-# Deliberately extends nothing, so it stacks beside whichever baseline a project already
-# deploys. The `lean` rule names context7 as one way to look a name up: that server comes
-# from commons-dev, so deploy the two together to have it.
+# Extends general-dev like the other language stacks: its workflow rules apply to Lean as
+# they stand, and its context7 server is one of the lookups the `lean` rule names.
+extends: ../general-dev
 
 rules:
   - name: lean
     category: lean-dev
 
 skills:
+  - lean-lint
   - lean-weave
 
 mcp_servers:
@@ -33,6 +35,8 @@ permissions:
     - { tool: bash, pattern: "lake build *", available_on: [claude, opencode] }
     - { tool: bash, pattern: "lake query *", available_on: [claude, opencode] }
     - { tool: bash, pattern: "lake env lean *", available_on: [claude, opencode] }
+    - { tool: bash, pattern: "lake lint", available_on: [claude, opencode] }
+    - { tool: bash, pattern: "lake lint *", available_on: [claude, opencode] }
     - { tool: bash, pattern: "lean --version", available_on: [claude, opencode] }
     - { tool: bash, pattern: "lake --version", available_on: [claude, opencode] }
     - { tool: mcp, pattern: "lean-lsp", available_on: [claude] }

@@ -2,7 +2,9 @@
 
 A Lean 4 development stack for Claude Code, OpenCode, and Antigravity CLI, deployable with
 `bun-off`. It puts the Lean checker, not the assistant's reading of the code, in charge of
-deciding whether a file is correct.
+deciding whether a file is correct. It extends [`general-dev`](../general-dev/README.md), so
+deploying it also installs that bundle's workflow rules, the `context7` and `tldr` servers, and
+rtk command-output compression.
 
 ## What it deploys
 
@@ -14,18 +16,22 @@ MCP server:
 Rule (always on):
 
 - `lean`: check after every edit, read the goal before choosing a tactic, report every
-  `sorry`, look names up instead of recalling them, and never change the pinned toolchain
-  without asking.
+  `sorry`, fix linter warnings or suppress them at the declaration with a reason, look names
+  up instead of recalling them, and never change the pinned toolchain without asking.
 
-Skill (loaded on demand):
+Skills (loaded on demand):
 
+- `lean-lint`: set up and run the project's linters. It proposes `[leanOptions]` entries
+  (`linter.missingDocs`, and `weak.linter.mathlibStandardSet` for a Mathlib project) and a
+  `lintDriver` for Batteries' environment linter, edits the lakefile only once you agree, then
+  reports the warnings from `lake build` and `lake lint` grouped by linter.
 - `lean-weave`: build the project and weave its [Verso] literate HTML site with
   `lake query :literateHtml`. It reports errors and every `sorry`, and edits nothing.
 
 Permissions:
 
-- Allows `lake build`, `lake query`, `lake env lean`, the `--version` probes, and (Claude
-  Code) every `lean-lsp` tool.
+- Allows `lake build`, `lake query`, `lake env lean`, `lake lint`, the `--version` probes,
+  and (Claude Code) every `lean-lsp` tool.
 
 Settings (Claude Code only):
 
@@ -39,25 +45,22 @@ Settings (Claude Code only):
 boff deploy path/to/bun-off-bundles/lean-base --platform claude
 ```
 
-`lean-base` extends nothing, so it stacks beside a development baseline. The `lean` rule names
-context7 as one way to look a name up, and that server comes from `commons-dev`:
-
-```bash
-boff deploy path/to/bun-off-bundles/commons-dev path/to/bun-off-bundles/lean-base --platform claude
-```
-
 ## Prerequisites
 
 - `uv`, for `uvx` to launch `lean-lsp-mcp`.
 - `rg` (ripgrep), which `lean-lsp-mcp` uses for its `lean_local_search` tool.
+- Batteries (directly or through Mathlib) for `lake lint`; the syntax linters need nothing.
 
 ## Notes
 
 - Antigravity CLI has no workspace settings or permissions file, so it gets the server, the
-  rule, and the skill, but neither the permissions nor the Lean FRO plugin.
+  rule, and the skills, but neither the permissions nor the Lean FRO plugin.
 - Of the Lean FRO skills, `lean-proof` and `lean-mwe` matter most for everyday work; the rest
   target Lean and Mathlib contributors.
-- There is no check-on-edit hook: the `lean-lsp` diagnostics already cover it.
+- There is no check-on-edit hook: the `lean-lsp` diagnostics already cover it, linter
+  warnings included.
+- The bundle ships no linter configuration of its own: linters are set in the project's
+  lakefile, which `lean-lint` proposes changes to but never edits unasked.
 
 [lean-lsp-mcp]: https://github.com/oOo0oOo/lean-lsp-mcp
 [leanprover/skills]: https://github.com/leanprover/skills
