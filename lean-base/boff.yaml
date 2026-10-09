@@ -10,7 +10,7 @@ meta:
     and the Lean FRO skills (proof method, MWEs, toolchain bisection, Lean and Mathlib
     contribution conventions) come fetched from their own repository. It builds on
     `general-dev`, so the language-agnostic workflow habits come with it.
-  version: "0.1.0"
+  version: "0.2.0"
   author: bugcounting.net
 
 # Extends general-dev like the other language stacks: its workflow rules apply to Lean as
