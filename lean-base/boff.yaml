@@ -1,0 +1,54 @@
+meta:
+  name: lean-base
+  description: Lean 4 development with the Lean language server and the Lean FRO skills.
+  long_description: |
+    For anyone writing Lean 4, whether programs or proofs. It connects the assistant to Lean's
+    language server, so it reads the real goal state and diagnostics instead of guessing them,
+    and it sets a short discipline for Lean work: check after every edit, look names up rather
+    than recall them, fix linter warnings rather than silence them, and never leave a `sorry`
+    unreported. Skills set up and run the project's linters and weave its Verso literate site,
+    and on Claude Code the Lean FRO skills plugin comes linked by reference. It builds on
+    `general-dev`, so the language-agnostic workflow habits come with it.
+  version: "0.1.0"
+  author: bugcounting.net
+
+# Extends general-dev like the other language stacks: its workflow rules apply to Lean as
+# they stand, and its context7 server is one of the lookups the `lean` rule names.
+extends: ../general-dev
+
+rules:
+  - name: lean
+    category: lean-dev
+
+skills:
+  - lean-lint
+  - lean-weave
+
+mcp_servers:
+  - lean-lsp
+
+# Antigravity has no established permission format, so every entry names the platforms
+# that take it rather than warn on each antigravity deploy.
+permissions:
+  allow:
+    - { tool: bash, pattern: "lake build", available_on: [claude, opencode] }
+    - { tool: bash, pattern: "lake build *", available_on: [claude, opencode] }
+    - { tool: bash, pattern: "lake query *", available_on: [claude, opencode] }
+    - { tool: bash, pattern: "lake env lean *", available_on: [claude, opencode] }
+    - { tool: bash, pattern: "lake lint", available_on: [claude, opencode] }
+    - { tool: bash, pattern: "lake lint *", available_on: [claude, opencode] }
+    - { tool: bash, pattern: "lean --version", available_on: [claude, opencode] }
+    - { tool: bash, pattern: "lake --version", available_on: [claude, opencode] }
+    - { tool: mcp, pattern: "lean-lsp", available_on: [claude] }
+
+# Link the Lean FRO skills by reference instead of copying them: Claude Code offers to
+# install the marketplace plugin when the workspace is trusted.
+settings:
+  claude:
+    extraKnownMarketplaces:
+      leanprover:
+        source:
+          source: github
+          repo: leanprover/skills
+    enabledPlugins:
+      lean@leanprover: true

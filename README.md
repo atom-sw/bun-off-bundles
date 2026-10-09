@@ -14,6 +14,8 @@ Each directory here is a manifest folder you can deploy as-is, or extend with yo
 | [`general-dev`](general-dev/README.md) | `commons-dev` plus the `tldr` (tldr-code) MCP server for project-wide code intelligence. |
 | [`python`](python/README.md) | A Python stack: `uv`, `ruff`, type-checking and `pytest` rules, the `serena` MCP server, a ruff format-on-edit hook, and a packaging skill. |
 | [`python-scripts`](python-scripts/README.md) | A lightweight stack for standalone scripts: stdlib-first rules, `unittest` testing, a ruff format-on-edit hook, and a `new-script` scaffolding skill. |
+| [`lean-base`](lean-base/README.md) | A Lean 4 stack: the `lean-lsp` MCP server for goals and diagnostics, a check-every-edit rule, linter-setup and Verso site-weaving skills, and the Lean FRO skills plugin on Claude Code. |
+| [`lean-tutorial`](lean-tutorial/README.md) | `lean-base` plus a tutoring style for co-writing a literate Lean tutorial with a learner: one concept per step, the learner proves first. |
 | [`frugal-context`](frugal-context/README.md) | Scope discipline that keeps a run cheap and accurate: start at the files you named, widen one notch at a time, and report conclusions rather than evidence. |
 | [`bun-off-bundle`](bun-off-bundle/README.md) | A skill that teaches the assistant to author Bun Off bundles: the manifest format, the artifact types, and what each platform supports. |
 | [`writing`](writing/README.md) | Prose style for what the assistant writes: American English, documentation style, and a plain-technical-writing skill. Install it globally. |
@@ -24,7 +26,9 @@ on:
 
 ```
 commons-dev                          development
-├── general-dev ── python
+├── general-dev
+│   ├── python
+│   └── lean-base ── lean-tutorial
 └── python-scripts
 
 writing                              prose
@@ -34,6 +38,7 @@ bun-off-bundle                       authoring
 
 `general-dev` extends `commons-dev`; `python` extends `general-dev`; `python-scripts` extends
 `commons-dev` directly (a leaner base, without the project-wide `tldr` code-intelligence server).
+`lean-base` extends `general-dev` too, and `lean-tutorial` extends `lean-base`.
 
 `writing`, `frugal-context`, and `bun-off-bundle` are separate roots and extend nothing.
 `writing-simple-english` is a companion to `writing`: it holds one always-on
