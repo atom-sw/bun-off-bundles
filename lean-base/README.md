@@ -27,17 +27,14 @@ Skills (loaded on demand):
   reports the warnings from `lake build` and `lake lint` grouped by linter.
 - `lean-weave`: build the project and weave its [Verso] literate HTML site with
   `lake query :literateHtml`. It reports errors and every `sorry`, and edits nothing.
+- The nine Lean FRO skills from [leanprover/skills], fetched at deploy time and pinned to one
+  commit: `lean-proof`, `lean-mwe`, `lean-bisect`, `lean-setup`, `lean-pr`, `mathlib-build`,
+  `mathlib-pr`, `mathlib-review`, and `nightly-testing`. They deploy to all three platforms.
 
 Permissions:
 
 - Allows `lake build`, `lake query`, `lake env lean`, `lake lint`, the `--version` probes,
   and (Claude Code) every `lean-lsp` tool.
-
-Settings (Claude Code only):
-
-- Links the Lean FRO skills marketplace ([leanprover/skills]) and enables its `lean` plugin.
-  The skills stay in their own repository: Claude Code offers to install the plugin when you
-  trust the workspace, and updates it from the source.
 
 ## Usage
 
@@ -54,7 +51,14 @@ boff deploy path/to/bun-off-bundles/lean-base --platform claude
 ## Notes
 
 - Antigravity CLI has no workspace settings or permissions file, so it gets the server, the
-  rule, and the skills, but neither the permissions nor the Lean FRO plugin.
+  rule, and the skills, but not the permissions.
+- Deploying needs network access to GitHub, to fetch the Lean FRO skills. Bun Off caches the
+  clone, and fetches it once per run.
+- Upstream's `lean-setup` declares `name: lean4-setup` in its frontmatter, so each deploy warns
+  that it deploys under the folder name, `lean-setup`.
+- Earlier versions of this bundle linked the Lean FRO marketplace plugin on Claude Code instead.
+  Redeploying removes those settings; if you installed the plugin, uninstall it with
+  `claude plugin uninstall lean@leanprover` so the skills do not load twice.
 - Of the Lean FRO skills, `lean-proof` and `lean-mwe` matter most for everyday work; the rest
   target Lean and Mathlib contributors.
 - There is no check-on-edit hook: the `lean-lsp` diagnostics already cover it, linter
