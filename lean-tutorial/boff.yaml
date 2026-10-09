@@ -1,0 +1,18 @@
+meta:
+  name: lean-tutorial
+  description: Tutoring style for writing a literate Lean tutorial step by step with a learner.
+  long_description: |
+    For someone learning Lean by writing a tutorial with the assistant, where the learner's
+    understanding is the deliverable and the code is the evidence. It paces the work one Lean
+    concept at a time, lets the learner attempt each proof first and escalates hints only on
+    request, and never writes ahead. A second skill fixes the shape of a chapter written as a
+    literate Lean file and rendered with Verso, so the woven document teaches what the session
+    taught.
+  version: "0.1.0"
+  author: bugcounting.net
+
+extends: ../lean-base
+
+skills:
+  - lean-tutor
+  - literate-chapter
