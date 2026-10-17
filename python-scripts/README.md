@@ -40,6 +40,13 @@ Tooling:
 - A ruff format-on-edit hook (Claude) and an equivalent native ruff formatter (OpenCode). Both are
   guarded: they format an edited Python file only when the project opts into ruff (a ruff config
   or a `[tool.ruff]` table), so the bundle never reformats a non-ruff project.
+- The `pyright-lsp` Claude Code plugin, enabled in `.claude/settings.json` and installed
+  (project scope) by a `post_install` hook. Claude then sees Pyright's type errors after every
+  edit and can jump to definitions and references. If `claude` is not on PATH during the
+  deploy, install it by hand: `claude plugin install pyright-lsp@claude-plugins-official
+  --scope project`. `boff clean` disables the plugin but leaves its cache in
+  `~/.claude/plugins`. OpenCode needs no plugin: its built-in Pyright language server already
+  covers Python.
 - A `mise.toml` declaring the dev tools `ruff` and `pyright`. It pins no Python runtime and
   requires no uv: those dev tools help you write the script, but the script itself runs on plain
   Python. These merge with commons-dev's rtk into one mise drop-in, installed by the inherited
@@ -52,7 +59,8 @@ Tooling:
   dependencies, but it is never required to run a dependency-free script.
 - **No project-wide code intelligence**: it extends `commons-dev`, not `general-dev`, so it skips
   the `tldr` (tldr-code) server (whose whole-project view adds little for a lone script) and the
-  `serena` server that the `python` bundle adds.
+  `serena` server that the `python` bundle adds. The `pyright-lsp` plugin stays: it reuses the
+  `pyright` the bundle already installs and works file by file.
 
 ## Usage
 
