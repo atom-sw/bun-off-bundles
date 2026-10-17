@@ -7,7 +7,7 @@ meta:
     formatting, typing, testing, and dependency management, keeps files tidy as they change,
     gives the assistant a semantic understanding of the code for precise navigation and edits,
     and knows how to cut a release when the project is ready to ship.
-  version: "0.1.0"
+  version: "0.2.0"
   author: bugcounting.net
 
 extends: ../general-dev
@@ -46,6 +46,11 @@ event_hooks:
     available_on: [claude]
 
 settings:
+  claude:
+    # Pyright diagnostics after every edit, through Claude Code's LSP support. Only a
+    # plugin can declare an LSP server; hooks/pyright-lsp.py installs it.
+    enabledPlugins:
+      pyright-lsp@claude-plugins-official: true
   opencode:
     formatter:
       ruff:
@@ -61,3 +66,7 @@ settings:
 
 mise:
   - mise/mise.toml
+
+hooks:
+  post_install:
+    - script: pyright-lsp   # install the plugin that `enabledPlugins` turns on
